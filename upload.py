@@ -5,7 +5,8 @@ import sys
 import time
 import subprocess
 
-HOUR_LIST = [9, 12, 15, 18, 21]
+HOUR_LIST = [6, 12, 18, 21]
+INTERVAL = 60*60 # sec
 
 while True:
     date = subprocess.check_output('date', shell=True)
@@ -13,7 +14,12 @@ while True:
     hour = int(date_list[3])
 
     if hour in HOUR_LIST:
+        t1 = time.time()
         os.system('git add index.html')
         os.system('git commit -m "' + date + '"')
         os.system('git push')
-    time.sleep(60*60) # every hour
+        t2 = time.time()
+        tdiff = int(t2 - t1 + 0.5) + 1
+        time.sleep(INTERVAL - tdiff) # every hour
+    else:
+        time.sleep(INTERVAL) # every hour
